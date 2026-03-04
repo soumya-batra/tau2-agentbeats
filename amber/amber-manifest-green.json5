@@ -1,0 +1,47 @@
+{
+  manifest_version: "0.1.0",
+  program: {
+    image: "ghcr.io/rdi-foundation/tau2-agentbeats:latest",
+    entrypoint: ["uv", "run", "src/server.py", "--host", "0.0.0.0", "--port", "8081"],
+    env: {
+      OPENAI_API_KEY: "${config.openai_api_key}",
+      GEMINI_API_KEY: "${config.gemini_api_key}",
+      DEEPSEEK_API_KEY: "${config.deepseek_api_key}",
+      LOG_LEVEL: "INFO",
+    },
+    network: {
+      endpoints: [
+        { name: "endpoint", port: 8081 }
+      ]
+    }
+  },
+  config_schema: {
+    type: "object",
+    properties: {
+      openai_api_key: { type: "string", secret: true },
+      gemini_api_key: { type: "string", secret: true },
+      deepseek_api_key: { type: "string", secret: true },
+    },
+    required: [],
+    additionalProperties: false,
+  },
+  slots: {
+    proxy: { kind: "a2a" }
+  },
+  provides: {
+    a2a: { kind: "a2a", endpoint: "endpoint" }
+  },
+  exports: {
+    a2a: "a2a"
+  },
+  metadata: {
+    // Default assessment config passed to the green agent via the gateway.
+    // All fields are overridable at submission time via the scenario config_schema.
+    assessment_config: {
+      domain: "airline",      // airline | retail | telecom | mock
+      user_llm: "openai/gpt-4o-mini",  // LLM used by the UserSimulator
+      max_steps: 200,         // max orchestrator steps per task
+    },
+    participant_roles: ["agent"]  // must match Agent.required_roles in src/agent.py
+  }
+}

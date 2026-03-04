@@ -1,0 +1,65 @@
+{
+  manifest_version: "0.1.0",
+  config_schema: {
+    type: "object",
+    properties: {
+      // Tau2 evaluation settings.
+      // Domains: airline | retail | telecom | mock.
+      // To run the full benchmark, submit one run per domain.
+      domain: { type: "string", default: "airline" },
+      num_tasks: { type: "integer" },  // optional: limit number of tasks per run
+      // Purple agent model (litellm format, e.g. "openai/gpt-4o", "gemini/gemini-2.0-flash", "deepseek/deepseek-chat")
+      agent_llm: { type: "string", default: "openai/gpt-4o-mini" },
+      // UserSimulator model (same litellm format)
+      user_llm: { type: "string", default: "openai/gpt-4o-mini" },
+      // API keys — provide whichever keys are needed for your chosen agent_llm and user_llm
+      openai_api_key: { type: "string", secret: true },
+      gemini_api_key: { type: "string", secret: true },
+      deepseek_api_key: { type: "string", secret: true },
+    },
+    required: ["agent_llm"],
+    additionalProperties: false,
+  },
+  components: {
+    gateway: {
+      manifest: "https://raw.githubusercontent.com/RDI-Foundation/agentbeats-gateway/refs/heads/main/amber-manifest.json5",
+      config: {
+        assessment_config: {
+          domain: "${config.domain}",
+          num_tasks: "${config.num_tasks}",
+          user_llm: "${config.user_llm}",
+        },
+        participant_roles: {
+          green: "tau2_evaluator",
+          purple1: "agent",
+        },
+        callback_urls: {
+          green: "${bindings.green-proxy.url}",
+        }
+      }
+    },
+    green: {
+      manifest: "./amber-manifest-green.json5",
+      config: {
+        openai_api_key: "${config.openai_api_key}",
+        gemini_api_key: "${config.gemini_api_key}",
+        deepseek_api_key: "${config.deepseek_api_key}",
+      }
+    },
+    purple_agent: {
+      manifest: "./amber-manifest-purple.json5",
+      config: {
+        agent_llm: "${config.agent_llm}",
+        openai_api_key: "${config.openai_api_key}",
+        gemini_api_key: "${config.gemini_api_key}",
+        deepseek_api_key: "${config.deepseek_api_key}",
+      }
+    }
+  },
+  bindings: [
+    { to: "#gateway.green",   from: "#green.a2a" },
+    { to: "#gateway.purple1", from: "#purple_agent.a2a" },
+    { to: "#green.proxy",     from: "#gateway.proxy", weak: true, name: "green-proxy" }
+  ],
+  exports: { results: "#gateway.results" }
+}

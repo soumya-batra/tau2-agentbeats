@@ -10,7 +10,7 @@ And fill out the required values.
 ## Compile
 
 ```bash
-docker run --rm -v "$PWD":/work -w /work ghcr.io/rdi-foundation/amber-cli:main compile amber-scenario.json5 --docker-compose tau2.yml
+docker run --rm -v "$PWD":/work -w /work ghcr.io/rdi-foundation/amber-cli:v0 compile amber-scenario.json5 --docker-compose tau2.yml
 ```
 
 ## Run

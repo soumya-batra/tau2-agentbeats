@@ -15,7 +15,7 @@
   },
 
   program: {
-    image: "ghcr.io/zaidishahbaz1/tau2-purple-agentbeats:latest",
+    image: "ghcr.io/soumya-batra/tau2-purple-agentbeats:latest",
     entrypoint: ["uv", "run", "src/server.py", "--host", "0.0.0.0", "--port", "9009"],
     env: {
       AGENT_LLM: "${config.agent_llm}",

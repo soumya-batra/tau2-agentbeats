@@ -7,6 +7,7 @@
       OPENAI_API_KEY: "${config.openai_api_key}",
       GEMINI_API_KEY: "${config.gemini_api_key}",
       DEEPSEEK_API_KEY: "${config.deepseek_api_key}",
+      NEBIUS_API_KEY: "${config.nebius_api_key}",
       LOG_LEVEL: "INFO",
     },
     network: {
@@ -21,6 +22,7 @@
       openai_api_key: { type: "string", secret: true, default: "" },
       gemini_api_key: { type: "string", secret: true, default: "" },
       deepseek_api_key: { type: "string", secret: true, default: "" },
+      nebius_api_key: { type: "string", secret: true, default: "" },
     },
     required: [],
     additionalProperties: false,
@@ -39,7 +41,7 @@
     // All fields are overridable at submission time via the scenario config_schema.
     assessment_config: {
       domain: "airline",      // airline | retail | telecom | mock
-      user_llm: "openai/gpt-4o-mini",  // LLM used by the UserSimulator
+      user_llm: "nebius/deepseek-ai/DeepSeek-V3.2", //"openai/gpt-4o-mini",  // LLM used by the UserSimulator
       max_steps: 200,         // max orchestrator steps per task
     },
     participant_roles: ["agent"]  // must match Agent.required_roles in src/agent.py

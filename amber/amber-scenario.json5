@@ -9,13 +9,14 @@
       domain: { type: "string", default: "airline" },
       num_tasks: { type: "integer" },  // optional: limit number of tasks per run
       // Purple agent model (litellm format, e.g. "openai/gpt-4o", "gemini/gemini-2.0-flash", "deepseek/deepseek-chat")
-      agent_llm: { type: "string", default: "openai/gpt-4o-mini" },
+      agent_llm: { type: "string", default: "nebius/deepseek-ai/DeepSeek-V3.2" },
       // UserSimulator model (same litellm format)
-      user_llm: { type: "string", default: "openai/gpt-4o-mini" },
+      user_llm: { type: "string", default: "nebius/deepseek-ai/DeepSeek-V3.2" },
       // API keys — provide whichever keys are needed for your chosen agent_llm and user_llm
       openai_api_key: { type: "string", secret: true },
       gemini_api_key: { type: "string", secret: true },
       deepseek_api_key: { type: "string", secret: true },
+      nebius_api_key: { type: "string", secret: true},
     },
     required: ["agent_llm"],
     additionalProperties: false,
@@ -44,6 +45,7 @@
         openai_api_key: "${config.openai_api_key}",
         gemini_api_key: "${config.gemini_api_key}",
         deepseek_api_key: "${config.deepseek_api_key}",
+        nebius_api_key: "${config.nebius_api_key}",
       }
     },
     purple_agent: {
@@ -53,6 +55,7 @@
         openai_api_key: "${config.openai_api_key}",
         gemini_api_key: "${config.gemini_api_key}",
         deepseek_api_key: "${config.deepseek_api_key}",
+        nebius_api_key: "${config.nebius_api_key}",
       }
     }
   },

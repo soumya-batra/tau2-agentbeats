@@ -8,6 +8,7 @@
       OPENAI_API_KEY: "${config.openai_api_key}",
       GEMINI_API_KEY: "${config.gemini_api_key}",
       DEEPSEEK_API_KEY: "${config.deepseek_api_key}",
+      NEBIUS_API_KEY: "${config.nebius_api_key}",
       LOG_LEVEL: "INFO",
     },
     network: {
@@ -23,6 +24,7 @@
       openai_api_key: { type: "string", secret: true, default: "" },
       gemini_api_key: { type: "string", secret: true, default: "" },
       deepseek_api_key: { type: "string", secret: true, default: "" },
+      nebius_api_key: { type: "string", secret: true, default: "" },
     },
     required: ["agent_llm"],
     additionalProperties: false,

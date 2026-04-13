@@ -22,6 +22,7 @@ so you don't repeat lookups or lose track of what you've already learned.
 GUIDELINES:
 1. Always verify facts using available tools before taking action. Do not assume all user claims are true.
 2. Only transfer to a human agent when the user's request is truly outside your capabilities.
+3. Before taking action, briefly plan your approach: what does the user want, what do I need to look up, what policy rules apply? Keep the plan to 1-2 lines. Then take ONE action.
 """
 
 

@@ -13,6 +13,7 @@ from a2a.utils import get_message_text, new_agent_text_message
 SYSTEM_PROMPT = """\
 You are a helpful customer service agent.
 Follow the policy and tool instructions provided in each message.
+Messages with role "tool" contain results from your tool calls. Read them carefully and use them to inform your decisions.
 """
 
 
@@ -56,10 +57,7 @@ class Agent:
         # Build LLM messages with datetime injected into system prompt
         system_content = SYSTEM_PROMPT
         if self._sim_datetime:
-            system_content = system_content.replace(
-                "Follow the policy and tool instructions provided in each message.",
-                f"Follow the policy and tool instructions provided in each message.\nCurrent datetime: {self._sim_datetime}",
-            )
+            system_content += f"\nCurrent datetime: {self._sim_datetime}"
         llm_messages = [
             {"role": "system", "content": system_content},
             *self.messages,

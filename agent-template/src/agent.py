@@ -1,6 +1,5 @@
 import json
 import os
-import re
 from pathlib import Path
 
 import litellm
@@ -13,8 +12,33 @@ from a2a.utils import get_message_text, new_agent_text_message
 SYSTEM_PROMPT = """\
 You are a helpful customer service agent.
 Follow the policy and tool instructions provided in each message.
-Messages with role "tool" contain results from your tool calls. Read them carefully and use them to inform your decisions.
+
+IMPORTANT:
+Messages with role "tool" contain structured STATE data returned from tool calls you made.
+Read them carefully — they contain the actual results you need to act on.
+Use these results to stay grounded — refer back to tool results before making decisions
+so you don't repeat lookups or lose track of what you've already learned.
+
+GUIDELINES:
+1. Always verify facts using available tools before taking action. Do not assume all user claims are true.
+2. Only transfer to a human agent when the user's request is truly outside your capabilities.
 """
+
+
+class AgentState:
+    """Live cumulative state object merged from all tool results."""
+
+    def __init__(self):
+        self.state: dict = {}
+
+    def update(self, parsed):
+        if isinstance(parsed, dict):
+            self.state.update(parsed)
+
+    def to_str(self) -> str:
+        if not self.state:
+            return "(empty — no data yet)"
+        return json.dumps(self.state, indent=2, default=str)
 
 
 DEBUG_DIR = Path(__file__).resolve().parent.parent / "debug"
@@ -25,9 +49,9 @@ class Agent:
     def __init__(self):
         self.model = os.getenv("AGENT_LLM", "nebius/deepseek-ai/DeepSeek-V3.2")
         self.messages: list[dict[str, object]] = []
+        self.state = AgentState()
         self._task_id = None
         self._turn = 0
-        self._sim_datetime: str | None = None
 
     async def run(self, message: Message, updater: TaskUpdater) -> None:
         input_text = get_message_text(message)
@@ -48,18 +72,9 @@ class Agent:
             self.messages.append({"role": "tool", "content": input_text})
         except (json.JSONDecodeError, TypeError):
             self.messages.append({"role": "user", "content": input_text})
-            # Extract simulated datetime from the first policy message
-            if self._sim_datetime is None:
-                match = re.search(r"current time is (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \w+)", input_text)
-                if match:
-                    self._sim_datetime = match.group(1)
 
-        # Build LLM messages with datetime injected into system prompt
-        system_content = SYSTEM_PROMPT
-        if self._sim_datetime:
-            system_content += f"\nCurrent datetime: {self._sim_datetime}"
         llm_messages = [
-            {"role": "system", "content": system_content},
+            {"role": "system", "content": SYSTEM_PROMPT},
             *self.messages,
         ]
 
@@ -78,7 +93,6 @@ class Agent:
             assistant_content = completion.choices[0].message.content or "{}"
             assistant_json = json.loads(assistant_content)
         except Exception:
-            import traceback; traceback.print_exc()
             assistant_json = {
                 "name": "respond",
                 "arguments": {"content": "I ran into an error processing your request."},

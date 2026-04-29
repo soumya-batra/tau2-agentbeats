@@ -27,7 +27,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/soumya-batra/tau2-purple-agentbeats
           tags: |
             type=ref,event=pr
             type=semver,pattern={{version}}
@@ -37,7 +37,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: agent-template
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -78,7 +78,7 @@ jobs:
 
       - name: Push Docker image
         if: success() && github.event_name != 'pull_request'
-        run: docker push --all-tags ghcr.io/${GITHUB_REPOSITORY,,}
+        run: docker push --all-tags ghcr.io/soumya-batra/tau2-purple-agentbeats
 
       - name: Output image digest
         if: success() && github.event_name != 'pull_request'

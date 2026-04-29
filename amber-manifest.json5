@@ -6,6 +6,7 @@
     properties: {
       agent_llm: { type: "string" },
       openai_api_key: { type: "string", secret: true, default: "" },
+      openai_api_base: { type: "string", default: "" },
       nebius_api_key: { type: "string", secret: true, default: "" },
       gemini_api_key: { type: "string", secret: true, default: "" },
       deepseek_api_key: { type: "string", secret: true, default: "" },
@@ -20,6 +21,7 @@
     env: {
       AGENT_LLM: "${config.agent_llm}",
       OPENAI_API_KEY: "${config.openai_api_key}",
+      OPENAI_API_BASE: "${config.openai_api_base}",
       NEBIUS_API_KEY: "${config.nebius_api_key}",
       GEMINI_API_KEY: "${config.gemini_api_key}",
       DEEPSEEK_API_KEY: "${config.deepseek_api_key}",

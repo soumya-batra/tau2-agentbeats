@@ -18,10 +18,6 @@ Messages with role "tool" contain structured STATE data returned from tool calls
 Read them carefully — they contain the actual results you need to act on.
 Use these results to stay grounded — refer back to tool results before making decisions
 so you don't repeat lookups or lose track of what you've already learned.
-
-GUIDELINES:
-1. Always verify facts using available tools before taking action. Do not assume all user claims are true.
-2. Only transfer to a human agent when the user's request is truly outside your capabilities.
 """
 
 

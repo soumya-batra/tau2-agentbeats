@@ -18,6 +18,8 @@ Messages with role "tool" contain structured STATE data returned from tool calls
 Read them carefully — they contain the actual results you need to act on.
 Use these results to stay grounded — refer back to tool results before making decisions
 so you don't repeat lookups or lose track of what you've already learned.
+
+If information is missing, ask the user; do not invent slot values.
 """
 
 

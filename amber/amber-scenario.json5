@@ -16,7 +16,8 @@
       openai_api_key: { type: "string", secret: true },
       gemini_api_key: { type: "string", secret: true },
       deepseek_api_key: { type: "string", secret: true },
-      nebius_api_key: { type: "string", secret: true},
+      nebius_api_key: { type: "string", secret: true },
+      fireworks_api_key: { type: "string", secret: true },
     },
     required: ["agent_llm"],
     additionalProperties: false,
@@ -46,6 +47,7 @@
         gemini_api_key: "${config.gemini_api_key}",
         deepseek_api_key: "${config.deepseek_api_key}",
         nebius_api_key: "${config.nebius_api_key}",
+        fireworks_api_key: "${config.fireworks_api_key}",
       }
     },
     purple_agent: {
@@ -56,6 +58,7 @@
         gemini_api_key: "${config.gemini_api_key}",
         deepseek_api_key: "${config.deepseek_api_key}",
         nebius_api_key: "${config.nebius_api_key}",
+        fireworks_api_key: "${config.fireworks_api_key}",
       }
     }
   },

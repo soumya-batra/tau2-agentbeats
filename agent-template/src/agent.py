@@ -85,8 +85,10 @@ class Agent:
             completion = litellm.completion(
                 model=self.model,
                 messages=llm_messages,
-                temperature=0.0,
+                temperature=0.6,
+                top_p=0.95,
                 response_format={"type": "json_object"},
+                extra_body={"top_k": 20},
             )
             assistant_content = completion.choices[0].message.content or "{}"
             assistant_json = json.loads(assistant_content)

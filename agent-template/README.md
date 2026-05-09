@@ -1,6 +1,16 @@
-# A2A Agent Template
+# Tau2 Purple Agent
 
-A minimal template for building [A2A (Agent-to-Agent)](https://a2a-protocol.org/latest/) agents.
+A purple agent for the [Tau2 benchmark](https://github.com/sierra-research/tau2-bench) on the [AgentBeats](https://agentbeats.dev) platform. Solves customer service tasks across multiple domains (airline, retail, telecom) via the [A2A protocol](https://a2a-protocol.org/latest/).
+
+## Approach: Plan-Reason-Verify-Act Loop
+
+We implement a **Plan → Reason → Verify → Act** loop. In the first turn, the agent creates a short plan with steps and an immediate next step, and keeps updating it as new information arrives. Based on this plan, it reasons about its current action. We also apply self-critique, inspired by promising research in this direction, where the agent verifies its reasoning against the goal it is trying to achieve. If verification fails, a revised reasoning and verification step is generated until validation passes. This happens within a single LLM call, avoiding additional round trips.
+
+Each JSON response contains:
+1. **Plan** — working memory with goal, steps, gathered facts, completed steps, and next step
+2. **Reason** — why the chosen action is the right next step given the current plan and facts
+3. **Verify** — self-critique checking whether the action advances the goal and follows policy correctly
+4. **Act** — the tool call or user response to execute
 
 ## Project Structure
 
@@ -8,7 +18,7 @@ A minimal template for building [A2A (Agent-to-Agent)](https://a2a-protocol.org/
 src/
 ├─ server.py      # Server setup and agent card configuration
 ├─ executor.py    # A2A request handling
-├─ agent.py       # Your agent implementation goes here
+├─ agent.py       # Agent implementation (Plan-Reason-Verify-Act loop)
 └─ messenger.py   # A2A messaging utilities
 tests/
 └─ test_agent.py  # Agent tests
@@ -19,20 +29,6 @@ amber-manifest.json5  # Amber manifest
 └─ workflows/
    └─ test-and-publish.yml # CI workflow
 ```
-
-## Getting Started
-
-1. **Create your repository** - Click "Use this template" to create your own repository from this template
-
-2. **Implement your agent** - Add your agent logic to [`src/agent.py`](src/agent.py)
-
-3. **Configure your agent card** - Fill in your agent's metadata (name, skills, description) in [`src/server.py`](src/server.py)
-
-4. **Fill out your [Amber](https://github.com/RDI-Foundation/amber) manifest** - Update [`amber-manifest.json5`](amber-manifest.json5) to use your agent in Amber scenarios
-
-5. **Write your tests** - Add custom tests for your agent in [`tests/test_agent.py`](tests/test_agent.py)
-
-For a concrete example of implementing an agent using this template, see this [draft PR](https://github.com/RDI-Foundation/agent-template/pull/8).
 
 ## Running Locally
 

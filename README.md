@@ -4,6 +4,8 @@ A customer service agent built for the [Tau2 benchmark](https://github.com/sierr
 
 ## Results
 
+Base Model useed: Qwen3.5-397B-A17B
+
 | Domain | Score |
 |--------|-------|
 | Telecom | 101/114 |
